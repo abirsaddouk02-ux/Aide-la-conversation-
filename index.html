@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Course A2 - Interactive Speaking Practice</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #185FA5;
+      --accent: #1D9E75;
+      --surface-light: #F1EFE8;
+      --surface-card: #FFFFFF;
+      --text-primary: #2C2C2A;
+      --text-secondary: #5F5E5A;
+      --border: #B4B2A9;
+      --success: #3B6D11;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: var(--surface-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .unit-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .unit-btn {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--text-primary);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .unit-btn:hover {
+      border-color: var(--primary);
+      background: #E6F1FB;
+    }
+    
+    .unit-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .main-title {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    
+    .unit-title {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .content-area {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .question-display {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .question-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .question-text {
+      font-size: 44px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+    
+    .vocabulary-section {
+      background: linear-gradient(135deg, #E6F1FB 0%, #E1F5EE 100%);
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+    
+    .vocab-title {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .vocab-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    
+    .vocab-item {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 500;
+      min-width: 200px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    
+    button {
+      padding: 1rem 2rem;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 140px;
+    }
+    
+    button:hover {
+      border-color: var(--primary);
+      background: #E6F1FB;
+    }
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .finish-btn {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+    
+    .finish-btn:hover {
+      background: #2f5d0a;
+      border-color: #2f5d0a;
+    }
+    
+    .progress {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    .finish-screen {
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .finish-screen h2 {
+      font-size: 36px;
+      color: var(--success);
+      margin-bottom: 1rem;
+    }
+    
+    .finish-screen p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .content-area {
+        padding: 1.5rem;
+      }
+      
+      .question-text {
+        font-size: 28px;
+      }
+      
+      .vocab-item {
+        min-width: 150px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="main-title">English Course A2</div>
+      <div class="unit-title">Interactive Speaking Practice</div>
+      
+      <div class="unit-selector">
+        <button class="unit-btn active" onclick="switchUnit(0)">Unit 1</button>
+        <button class="unit-btn" onclick="switchUnit(1)">Unit 2</button>
+        <button class="unit-btn" onclick="switchUnit(2)">Unit 3</button>
+        <button class="unit-btn" onclick="switchUnit(3)">Unit 4</button>
+        <button class="unit-btn" onclick="switchUnit(4)">Unit 5</button>
+        <button class="unit-btn" onclick="switchUnit(5)">Unit 6</button>
+      </div>
+    </div>
+
+    <div class="content-area" id="content"></div>
+  </div>
+
+  <script>
+    const units = [
+      {
+        title: "Introducing Yourself",
+        questions: [
+          {
+            question: "What's your name?",
+            vocabulary: ["My name is...", "I'm...", "I'm called..."]
+          },
+          {
+            question: "Where are you from?",
+            vocabulary: ["I'm from...", "I come from...", "I live in...", "I'm originally from..."]
+          },
+          {
+            question: "What do you do? (work or study)",
+            vocabulary: ["I'm a...", "I work as a...", "I'm a student in...", "I study...", "I work in..."]
+          },
+          {
+            question: "What are your hobbies or interests?",
+            vocabulary: ["I like...", "I enjoy...", "I love...", "I'm interested in...", "My hobby is..."]
+          },
+          {
+            question: "Tell me about your family or people close to you",
+            vocabulary: ["I have...", "My family...", "My friends...", "I live with...", "I have a..."]
+          }
+        ]
+      },
+      {
+        title: "Daily Habits",
+        questions: [
+          {
+            question: "What time do you wake up?",
+            vocabulary: ["I wake up at...", "I get up at...", "My alarm goes off at..."]
+          },
+          {
+            question: "What do you eat for breakfast?",
+            vocabulary: ["I eat...", "I have...", "I usually eat...", "For breakfast, I..."]
+          },
+          {
+            question: "How do you go to work or school?",
+            vocabulary: ["I go by...", "I take...", "I drive...", "I walk...", "I use public transport..."]
+          },
+          {
+            question: "What do you do in the evening?",
+            vocabulary: ["I watch...", "I read...", "I cook...", "I relax...", "I spend time..."]
+          },
+          {
+            question: "What time do you go to bed?",
+            vocabulary: ["I go to bed at...", "I sleep at...", "I usually go to sleep..."]
+          }
+        ]
+      },
+      {
+        title: "Food & Restaurants",
+        questions: [
+          {
+            question: "What's your favorite food?",
+            vocabulary: ["I like...", "My favorite is...", "I love eating...", "I prefer..."]
+          },
+          {
+            question: "Can you order a meal at a restaurant?",
+            vocabulary: ["I'd like...", "Can I have...", "I'll have...", "Could I order..."]
+          },
+          {
+            question: "Do you have any dietary restrictions?",
+            vocabulary: ["I'm vegetarian...", "I don't eat...", "I'm allergic to...", "I avoid..."]
+          },
+          {
+            question: "Describe a meal you cooked recently",
+            vocabulary: ["I made...", "I prepared...", "I cooked...", "It was..."]
+          },
+          {
+            question: "Where do you like to eat out?",
+            vocabulary: ["I go to...", "My favorite restaurant is...", "I enjoy eating at...", "I prefer..."]
+          }
+        ]
+      },
+      {
+        title: "Places & Directions",
+        questions: [
+          {
+            question: "Describe a place you like to visit",
+            vocabulary: ["It's...", "It has...", "There's...", "It's located...", "You can find..."]
+          },
+          {
+            question: "How do you go there?",
+            vocabulary: ["I take...", "It's about... away", "I go by...", "It takes... minutes"]
+          },
+          {
+            question: "Can you give directions to a place near you?",
+            vocabulary: ["Go straight...", "Turn left/right...", "It's next to...", "You'll see..."]
+          },
+          {
+            question: "What's special about your neighborhood?",
+            vocabulary: ["There's...", "We have...", "It has...", "You can find...", "It's known for..."]
+          },
+          {
+            question: "Describe your home or apartment",
+            vocabulary: ["It's...", "It has...", "There's...", "My favorite room is...", "It's near..."]
+          }
+        ]
+      },
+      {
+        title: "Interests & Hobbies",
+        questions: [
+          {
+            question: "What's your main hobby?",
+            vocabulary: ["I enjoy...", "My hobby is...", "I love...", "I'm passionate about...", "I spend time..."]
+          },
+          {
+            question: "How often do you do it?",
+            vocabulary: ["Every day...", "Once a week...", "Several times...", "Whenever I can...", "In my free time..."]
+          },
+          {
+            question: "What sports do you like?",
+            vocabulary: ["I play...", "I do...", "I'm interested in...", "I watch...", "I enjoy..."]
+          },
+          {
+            question: "Tell me about a book, movie, or show you like",
+            vocabulary: ["It's about...", "I like it because...", "The main character...", "It's really...", "I recommend..."]
+          },
+          {
+            question: "Why do you enjoy these things?",
+            vocabulary: ["It's relaxing...", "It's fun...", "I like the...", "It helps me...", "It makes me feel..."]
+          }
+        ]
+      },
+      {
+        title: "Past Experiences",
+        questions: [
+          {
+            question: "Tell me about a trip you took recently",
+            vocabulary: ["I went to...", "I traveled to...", "It was...", "I saw...", "I did..."]
+          },
+          {
+            question: "What was the best part of your trip?",
+            vocabulary: ["The best part was...", "I enjoyed...", "I loved...", "It was amazing...", "I'll never forget..."]
+          },
+          {
+            question: "Tell me about a memorable day",
+            vocabulary: ["I remember...", "It happened...", "That day was...", "First..., then...", "It was..."]
+          },
+          {
+            question: "What did you do this weekend?",
+            vocabulary: ["I went to...", "I spent time...", "I visited...", "I stayed at...", "I relaxed..."]
+          },
+          {
+            question: "Share something interesting that happened to you",
+            vocabulary: ["One day...", "Last month...", "I was...", "Suddenly...", "It was incredible..."]
+          }
+        ]
+      }
+    ];
+
+    let currentUnit = 0;
+    let currentQuestion = 0;
+
+    function switchUnit(unitIndex) {
+      currentUnit = unitIndex;
+      currentQuestion = 0;
+      updateUnitButtons();
+      displayQuestion();
+    }
+
+    function updateUnitButtons() {
+      document.querySelectorAll('.unit-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === currentUnit);
+      });
+    }
+
+    function displayQuestion() {
+      const unit = units[currentUnit];
+      const q = unit.questions[currentQuestion];
+      
+      let html = `
+        <div class="question-display">
+          <div class="question-label">Question</div>
+          <div class="question-text">${q.question}</div>
+        </div>
+
+        <div class="vocabulary-section">
+          <div class="vocab-title">💡 Words you can use</div>
+          <div class="vocab-items">
+            ${q.vocabulary.map(v => `<div class="vocab-item">${v}</div>`).join('')}
+          </div>
+        </div>
+
+        <div class="controls">
+          <button onclick="prevQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>← Previous</button>
+          <button onclick="nextQuestion()" class="${currentQuestion === unit.questions.length - 1 ? 'finish-btn' : ''}">
+            ${currentQuestion === unit.questions.length - 1 ? 'Finish Unit' : 'Next →'}
+          </button>
+        </div>
+
+        <div class="progress">Question ${currentQuestion + 1} of ${unit.questions.length}</div>
+      `;
+      
+      document.getElementById('content').innerHTML = html;
+    }
+
+    function nextQuestion() {
+      const unit = units[currentUnit];
+      if (currentQuestion < unit.questions.length - 1) {
+        currentQuestion++;
+        displayQuestion();
+      } else {
+        showFinish();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        displayQuestion();
+      }
+    }
+
+    function showFinish() {
+      const unit = units[currentUnit];
+      document.getElementById('content').innerHTML = `
+        <div class="finish-screen">
+          <h2>✓ Unit ${currentUnit + 1} Complete!</h2>
+          <p><strong>${unit.title}</strong></p>
+          <p style="margin-bottom: 3rem; color: #888;">Great conversation practice!</p>
+          <button onclick="currentQuestion = 0; displayQuestion();">Review Unit</button>
+          <button onclick="switchUnit((currentUnit + 1) % 6)" style="margin-left: 1rem;">
+            ${currentUnit === 5 ? 'Start Unit 1' : 'Next Unit →'}
+          </button>
+        </div>
+      `;
+    }
+
+    // Initialize
+    displayQuestion();
+  </script>
+</body>
+</html>
